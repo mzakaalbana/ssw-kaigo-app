@@ -4,4 +4,8 @@
   const path = location.pathname.split('/').pop();
   // (opsional) implementasi highlight kalau nav berupa <a> dengan data-page
   // untuk sekarang tidak wajib, karena kita pakai tombol <a> biasa.
-})();
+})();if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js").catch(() => {});
+  });
+}
