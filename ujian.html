@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SSW Kaigo – Ujian</title>
+  <link rel="stylesheet" href="./assets/css/styles.css" />
+</head>
+<body>
+  <div class="container">
+    <header class="card">
+      <h1>Ujian</h1>
+      <p class="muted">Jawab semua soal. Feedback disembunyikan hingga tombol “Selesai”.</p>
+      <nav class="controls">
+        <a class="btn" href="./index.html">🏠 Menu</a>
+        <a class="btn" href="./latihan.html">➡️ Latihan</a>
+        <a class="btn" href="./belajar.html">📚 Belajar</a>
+        <span id="meta" class="pill">0/0</span>
+      </nav>
+      <div class="panel topbar">
+        <div class="progress" style="flex:1 1 auto"><div class="bar" id="bar"></div></div>
+        <div class="timer pill" id="timer">20:00</div>
+      </div>
+      <div class="hint">Waktu berjalan. Saat habis, hasil akan ditampilkan otomatis.</div>
+    </header>
+
+    <main class="card panel" id="quizPanel">
+      <div id="stage" class="qwrap"></div>
+      <div class="toolbar">
+        <div class="left">
+          <button id="prev">← Sebelumnya</button>
+          <button id="next">Berikutnya →</button>
+        </div>
+        <div class="right">
+          <span id="status" class="muted">Belum dikirim</span>
+          <button id="submit" class="btn-accent">Selesai & Lihat Skor</button>
+        </div>
+      </div>
+    </main>
+
+    <section class="card panel hidden" id="resultPanel">
+      <div class="result">
+        <h2>Hasil</h2>
+        <p id="scoreLine"></p>
+        <div class="controls">
+          <button id="reviewWrong" class="btn">Tampilkan yang Salah Saja</button>
+          <button id="reviewAll" class="btn">Tampilkan Semua</button>
+          <button id="tryAgain" class="btn-accent">Coba Lagi (Acak Ulang)</button>
+        </div>
+        <div id="review" class="korek"></div>
+      </div>
+    </section>
+  </div>
+
+  <script src="./assets/js/bank.js"></script>
+  <script src="./assets/js/quiz-core.js"></script>
+  <script>
+    // study=false, ada timer (misal 20 menit)
+    SSWQuiz.initQuiz({
+      study:false,
+      durationSec:20*60,
+      ids:{
+        meta:'meta', bar:'bar', timer:'timer', status:'status',
+        quizPanel:'quizPanel', resultPanel:'resultPanel', stage:'stage',
+        prev:'prev', next:'next', submit:'submit',
+        scoreLine:'scoreLine', review:'review',
+        reviewWrong:'reviewWrong', reviewAll:'reviewAll', tryAgain:'tryAgain'
+      }
+    });
+  </script>
+</body>
+</html>

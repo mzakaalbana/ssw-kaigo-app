@@ -1,0 +1,7 @@
+﻿# misc
+.DS_Store
+Thumbs.db
+
+# node (kalau nanti ada)
+node_modules/
+dist/

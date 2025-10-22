@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SSW Kaigo – Belajar (1–55)</title>
+  <!-- Pakai stylesheet global milikmu -->
+  <link rel="stylesheet" href="./assets/css/styles.css" />
+  <!-- Tambahan kecil & aman (scoped .learn-*) agar tidak bentrok -->
+  <style>
+    .learn-list{display:grid;gap:12px;margin-top:12px}
+    .learn-item{padding:12px;border:1px solid rgba(124,192,255,.22);border-radius:14px;background:rgba(255,255,255,.02)}
+    .learn-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
+    .learn-num{font-weight:700}
+    .learn-jp{font-size:18px;line-height:1.7;word-break:break-word;margin-top:6px}
+    .learn-idn{margin-top:6px}
+    .learn-idn .muted{display:block}
+    @media (max-width:560px){
+      .learn-jp{font-size:17px}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header konsisten: card + controls -->
+    <header class="card">
+      <h1>Belajar</h1>
+      <p class="muted">Ringkasan <strong>jawaban benar</strong> nomor <strong>1–55</strong> beserta <strong>arti Bahasa Indonesia</strong>. Tanpa A/B/C, tanpa edit.</p>
+      <div class="controls">
+        <a class="btn" href="./index.html">🏠 Menu</a>
+        <a class="btn" href="./latihan.html">➡️ Latihan</a>
+        <a class="btn" href="./ujian.html">🎯 Ujian</a>
+        <button id="btnExportCSV" class="btn-accent">Ekspor CSV</button>
+      </div>
+    </header>
+
+    <!-- Konten utama: card + panel -->
+    <main class="card panel">
+      <div id="list" class="learn-list"></div>
+    </main>
+  </div>
+
+  <script>
+    // ===== Data 1–55 (tanpa A/B/C) =====
+    const DATA = [
+      {no:1,  ans:"診察（しんさつ）したあとで薬（くすり）を飲（の）む", arti:"Setelah diperiksa dokter, minum obat."},
+      {no:2,  ans:"書（か）きます", arti:"Menulis; sinonim untuk 記録 (mencatat)."},
+      {no:3,  ans:"一人（ひとり）で座（すわ）れますか", arti:"Bisa duduk sendiri?"},
+      {no:4,  ans:"利用者（りようしゃ）と介護職（かいごしょく）が一緒（いっしょ）に歌（うた）を歌（うた）います", arti:"Pengguna dan caregiver bernyanyi bersama."},
+      {no:5,  ans:"献立（こんだて）", arti:"‘Daftar menu’ (sinonim メニュー)."},
+      {no:6,  ans:"エプロンを使（つか）います", arti:"Pakai apron/celemek agar tidak berantakan."},
+      {no:7,  ans:"右腕（みぎうで）から服（ふく）を着（き）ます", arti:"Kenakan baju mulai dari lengan kanan."},
+      {no:8,  ans:"利用者（りようしゃ）は介護職（かいごしょく）と一緒（いっしょ）に布団（ふとん）を干（ほ）します", arti:"Bersama caregiver menjemur futon."},
+      {no:9,  ans:"置（お）きます", arti:"Meletakkan (di atas meja)."},
+      {no:10, ans:"寝（ね）る前（まえ）に入（い）れ歯（ば）を外（はず）します", arti:"Sebelum tidur, lepaskan gigi palsu."},
+      {no:11, ans:"体（からだ）を拭（ふ）いてしまいました", arti:"Mengelap/menyeka tubuh."},
+      {no:12, ans:"寝（ね）る前（まえ）にトイレに行（い）くか確認（かくにん）します", arti:"Pastikan ke toilet sebelum tidur."},
+      {no:13, ans:"はい、入（はい）ってもいいです", arti:"Ya, boleh masuk (mandi)."},
+      {no:14, ans:"介護職（かいごしょく）は看護職（かんごしょく）に相談（そうだん）します", arti:"Caregiver konsultasi ke perawat."},
+      {no:15, ans:"今日（きょう）スープを飲（の）みたい", arti:"Memilih ingin minum sup hari ini."},
+      {no:16, ans:"今晩（こんばん）、利用者（りようしゃ）は息子（むすこ）の家（いえ）に泊（と）まります", arti:"Malam ini menginap di rumah anak laki-laki."},
+      {no:17, ans:"診察（しんさつ）後（ご）で薬（くすり）を飲（の）みます", arti:"Setelah diperiksa, minum obat."},
+      {no:18, ans:"ちょっと寒（さむ）いです", arti:"‘Agak dingin.’ (minta jendela ditutup)."},
+      {no:19, ans:"エアコンの温度（おんど）は上（あ）げますね", arti:"Akan dinaikkan suhu AC-nya."},
+      {no:20, ans:"浴室（よくしつ）で滑（すべ）らないように注意（ちゅうい）します", arti:"Hati-hati agar tidak terpeleset di kamar mandi."},
+      {no:21, ans:"明日（あした）、施設（しせつ）を出（で）ます", arti:"Besok keluar/pulang dari fasilitas."},
+
+      {no:22, ans:"体温計（たいおんけい）", arti:"Termometer."},
+      {no:23, ans:"髪（かみ）を梳（と）かす", arti:"Menyisir rambut."},
+      {no:24, ans:"トイレに行（い）ってから散歩（さんぽ）へ行（い）きます", arti:"Ke toilet dulu, baru jalan-jalan."},
+      {no:25, ans:"お茶（おちゃ）を飲（の）むと、咳（せき）が出（で）ます", arti:"Kalau minum teh, jadi batuk."},
+      {no:26, ans:"飲（の）み込み（こみ）", arti:"‘Menelan’ (sinonim 嚥下)."},
+      {no:27, ans:"踵（かかと）", arti:"Tumit."},
+      {no:28, ans:"拭（ふ）きます", arti:"Mengelap tubuh (setelah mandi)."},
+      {no:29, ans:"かきます", arti:"(Untuk ‘berkeringat’: keringat keluar/berkeringat)."},
+      {no:30, ans:"今晩（こんばん）、利用者（りようしゃ）は息子（むすこ）の家（いえ）に泊（と）まります", arti:"Malam ini menginap di rumah anak laki-laki."},
+      {no:31, ans:"入浴（にゅうよく）", arti:"Bantuan mandi."},
+      {no:32, ans:"申し送り（もうしおくり）二回（にかい）", arti:"Handover/briefing dua kali (jawaban sesuai tabel)."},
+      {no:33, ans:"うつ伏（ぶ）せ（うつぶせ）", arti:"Tengkurap."},
+      {no:34, ans:"利用者（りようしゃ）は杖（つえ）を使（つか）って部屋（へや）へ行（い）きます", arti:"Pergi ke kamar memakai tongkat."},
+      {no:35, ans:"夜（よる）はポータブルトイレを使（つか）って介護（かいご）が必要（ひつよう）です", arti:"Malam: pakai toilet portabel, perlu bantuan."},
+      {no:36, ans:"歩行器（ほこうき）", arti:"Alat bantu jalan (walker)."},
+      {no:37, ans:"ちょっとぬるいですか。少（すこ）し熱（あつ）くしますね", arti:"‘Akan saya buat agak lebih panas ya.’"},
+      {no:38, ans:"利用者（りようしゃ）はボタンをかけるとき時間（じかん）がかかります", arti:"Saat mengancing baju, butuh waktu."},
+      {no:39, ans:"臀部（でんぶ）", arti:"Bokong/daerah pantat."},
+      {no:40, ans:"出席（しゅっせき）", arti:"Hadir/ikut serta."},
+      {no:41, ans:"髭（ひげ）を剃（そ）ります", arti:"Mencukur jenggot."},
+      {no:42, ans:"利用者（りようしゃ）は午後（ごご）、娘（むすめ）と一緒（いっしょ）に夕食（ゆうしょく）を食（た）べます", arti:"Makan malam bersama putri."},
+      {no:43, ans:"仰向（あおむ）け", arti:"Telentang."},
+      {no:44, ans:"少（すこ）しよくしますね", arti:"‘Akan saya buat sedikit lebih kuat ya.’"},
+
+      {no:45, ans:"左（ひだり）耳（みみ）が聞（き）こえにくいです", arti:"Telinga kiri sulit mendengar."},
+      {no:46, ans:"左（ひだり）手（て）を上（あ）げてください", arti:"Angkat tangan kiri."},
+      {no:47, ans:["散歩（さんぽ）する時（とき）、たくさん歩（ある）いて足（あし）が痛（いた）いです",
+                   "散歩（さんぽ）の時（とき）、たくさん歩（ある）く"], arti:"Saat jalan-jalan, berjalan banyak (kemarin terlalu banyak jalan → kaki sakit)."},
+      {no:48, ans:"食事（しょくじ）の時（とき）お茶（ちゃ）を飲（の）みます", arti:"Minum teh saat makan."},
+      {no:49, ans:"チームを決（き）めます", arti:"Menentukan/menetapkan tim (ho-ren-so)."},
+      {no:50, ans:"面会（めんかい）してはいけません", arti:"Dilarang menjenguk (面会禁止)."},
+      {no:51, ans:"危険（きけん）", arti:"Berbahaya (sinonim 危ない)."},
+      {no:52, ans:"耳（みみ）", arti:"(Alat) 補聴器 dipakai di telinga."},
+      {no:53, ans:"シャワーだけ浴（あ）びます", arti:"Mandi shower saja."},
+      {no:54, ans:"一人（ひとり）でお風呂（ふろ）に入（はい）ります", arti:"Mandi sendiri (tidak perlu dibantu)."},
+      {no:55, ans:"ゆのみ", arti:"Cangkir teh (gaya Jepang)."}
+    ];
+
+    // ===== Render (UI konsisten: .card .panel .muted) =====
+    const listEl = document.getElementById('list');
+    listEl.innerHTML = DATA.map(item=>{
+      const num = item.no;
+      const arti = item.arti || "";
+      if(Array.isArray(item.ans)){
+        const lis = item.ans.map(a=>`<li>${a}</li>`).join("");
+        return `
+          <div class="learn-item">
+            <div class="learn-head">
+              <div class="learn-num">${num}.</div>
+              <span class="pill">Multi jawaban benar</span>
+            </div>
+            <ul class="learn-jp" style="margin:6px 0 0 20px">${lis}</ul>
+            <div class="learn-idn"><span class="muted">📝 ${arti}</span></div>
+          </div>
+        `;
+      }else{
+        return `
+          <div class="learn-item">
+            <div class="learn-head"><div class="learn-num">${num}.</div></div>
+            <div class="learn-jp">${item.ans}</div>
+            <div class="learn-idn"><span class="muted">📝 ${arti}</span></div>
+          </div>
+        `;
+      }
+    }).join("");
+
+    // ===== Ekspor CSV (no, jawaban, arti) =====
+    document.getElementById('btnExportCSV').addEventListener('click', ()=>{
+      const rows = [['no','jawaban_benar','arti']];
+      DATA.forEach(x=>{
+        const ans = Array.isArray(x.ans) ? x.ans.join(' / ') : x.ans;
+        rows.push([x.no, ans, x.arti||'']);
+      });
+      const csv = rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+      const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'ssw_kaigo_belajar_1-55.csv'; a.click();
+      URL.revokeObjectURL(url);
+    });
+  </script>
+</body>
+</html>
