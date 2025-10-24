@@ -1,4 +1,4 @@
-// BANK 55 soal (dari kisi) — semua kanji diberi furigana (hiragana)
+// BANK 55 soal (dari kisi) — format kanji（hiragana） tanpa <ruby>
 window.BANK = [
   {id:1, prompt:"Percakapan: kemarin ryousha demam, cek ke dokter, disuruh minum obat.", choices:[
     {t:"診察（しんさつ）したあとで薬（くすり）を飲（の）む", key:"A"},
